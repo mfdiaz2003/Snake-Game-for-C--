@@ -1,12 +1,12 @@
-//Testing this comment!
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
 using namespace std;
+
 bool gameOver;
 const int width = 20;
 const int height = 20;
-int x, y, fruitX, fruitY, score;
+int x, y, fruitX, fruitY, score, highScore;
 int tailX[100], tailY[100];
 int nTail;
 enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN };
@@ -72,7 +72,7 @@ void Draw() {
     for (int i = 0; i < width + 2; i++)
         cout << "#";
     cout << endl;
-    cout << "Score:" << score << endl;
+    cout << "Score: " << score << "  High Score: " << highScore << endl;
 }
 
 void Input() {
@@ -143,10 +143,16 @@ void Logic() {
         fruitY = rand() % height;
         nTail++;
     }
+
+    // Update high score
+    if (score > highScore) {
+        highScore = score;
+    }
 }
 
 int main() {
     HideCursor();
+    highScore = 0; // Initialize high score
     while (true) {
         Setup();
         while (!gameOver) {
@@ -170,3 +176,4 @@ int main() {
         }
     }
 }
+
