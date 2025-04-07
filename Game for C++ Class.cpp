@@ -128,15 +128,17 @@ void Logic() {
         break;
     }
 
-    if (x >= width) x = 0; else if (x < 0) x = width - 1;
-    if (y >= height) y = 0; else if (y < 0) y = height - 1;
+    // Check for boundary collision
+    if (x < 0 || x >= width || y < 0 || y >= height) {
+        gameOver = true;
+    }
 
     for (int i = 0; i < nTail; i++)
         if (tailX[i] == x && tailY[i] == y)
             gameOver = true;
 
     if (x == fruitX && y == fruitY) {
-        score += 10;
+        score += 1; // Change score increment from 10 to 1
         fruitX = rand() % width;
         fruitY = rand() % height;
         nTail++;
@@ -144,13 +146,27 @@ void Logic() {
 }
 
 int main() {
-    Setup();
     HideCursor();
-    while (!gameOver) {
-        Draw();
-        Input();
-        Logic();
-        Sleep(100); // sleep(10) for linux
+    while (true) {
+        Setup();
+        while (!gameOver) {
+            Draw();
+            Input();
+            Logic();
+            Sleep(100); // sleep(10) for linux
+        }
+        cout << "Game Over! Press 'r' to restart or 'x' to exit." << endl;
+        while (true) {
+            if (_kbhit()) {
+                char ch = _getch();
+                if (ch == 'r') {
+                    ClearScreen(); // Clear the screen before restarting
+                    break; // Restart the game
+                }
+                else if (ch == 'x') {
+                    return 0; // Exit the game
+                }
+            }
+        }
     }
-    return 0;
 }
